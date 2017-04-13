@@ -1,0 +1,22 @@
+group 'com.andrewmcguiness'
+version '1.0-SNAPSHOT'
+
+apply plugin: 'java'
+
+sourceCompatibility = 1.8
+
+repositories {
+    mavenCentral()
+    mavenLocal()
+}
+
+dependencies {
+    compile fileTree(dir: 'libs', include: '*.jar')
+
+    compile 'com.squareup.okhttp3:okhttp:3.6.0'
+    compile 'com.fasterxml.jackson.core:jackson-databind:2.3.1'
+    // https://mvnrepository.com/artifact/commons-io/commons-io
+    compile group: 'commons-io', name: 'commons-io', version: '2.4'
+
+    testCompile group: 'junit', name: 'junit', version: '4.12'
+}
