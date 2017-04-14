@@ -1,13 +1,44 @@
 group 'com.andrewmcguiness'
 version '1.0-SNAPSHOT'
 
+buildscript {
+    dependencies {
+        classpath group: 'de.dynamicfiles.projects.gradle.plugins', name: 'javafx-gradle-plugin', version: '8.8.2'
+    }
+    repositories {
+        mavenLocal()
+        mavenCentral()
+
+    }
+}
+
 apply plugin: 'java'
+apply plugin: 'application'
+
+mainClassName = 'MainDriver'
 
 sourceCompatibility = 1.8
 
 repositories {
     mavenCentral()
     mavenLocal()
+}
+
+apply plugin: 'javafx-gradle-plugin'
+
+
+jfx {
+    // minimal requirement for jfxJar-task
+    mainClass = 'MainDriver'
+
+    // minimal requirement for jfxNative-task
+    vendor = 'YourName'
+}
+
+jar {
+    manifest {
+        attributes 'Main-Class': 'MainDriver'
+    }
 }
 
 dependencies {
