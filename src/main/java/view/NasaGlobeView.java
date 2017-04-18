@@ -3,9 +3,14 @@ package view;
 import controller.CustomGlobePanel;
 import controller.FlightController;
 import gov.nasa.worldwind.BasicModel;
+import gov.nasa.worldwind.event.SelectEvent;
+import gov.nasa.worldwind.event.SelectListener;
 import gov.nasa.worldwind.layers.Earth.OSMMapnikLayer;
 import gov.nasa.worldwind.layers.Layer;
 import gov.nasa.worldwind.layers.MarkerLayer;
+import model.AppConstants;
+import model.FlightMarker;
+import model.PollDataException;
 import org.opensky.api.OpenSkyApi;
 import org.opensky.model.OpenSkyStates;
 
@@ -13,6 +18,7 @@ import javax.swing.*;
 
 
 public class NasaGlobeView extends JPanel {
+    private boolean running = true;
     //private RenderableLayer layer;
     private Thread fadeThread;
     private Thread flightUpdater;
@@ -28,10 +34,12 @@ public class NasaGlobeView extends JPanel {
     private CustomGlobePanel wwd;
 
 
-    public NasaGlobeView() {
+    public NasaGlobeView( int width, int height) {
+        this.setSize( width, height );
         wwd = new CustomGlobePanel();
-        wwd.setPreferredSize( new java.awt.Dimension( 1050, 700 ) );
-        wwd.setSize( 1050, 700 );
+        wwd.setPreferredSize( new java.awt.Dimension( width, height ) );
+
+//        wwd.setSize( 1050, 700 );
         this.add( wwd );
         wwd.setModel( new BasicModel() );
 
@@ -50,6 +58,22 @@ public class NasaGlobeView extends JPanel {
 
         flightUpdater = new Thread( new FlightUpdater() );
         flightUpdater.start();
+
+        wwd.addSelectListener( new SelectListener() {
+            @Override
+            public void selected( SelectEvent selectEvent ) {
+                if ( selectEvent.isLeftClick() && selectEvent.getTopObject() instanceof FlightMarker ) {
+                    FlightMarker m = ( FlightMarker ) selectEvent.getTopObject();
+                    System.out.println( m.getFlight() );
+                    selectEvent.consume();
+                }
+            }
+        } );
+    }
+
+    public void autoSize(){
+        this.setSize( this.getParent().getWidth(), getParent().getHeight() );
+        wwd.setPreferredSize( new java.awt.Dimension( getWidth(), getHeight() ) );
     }
 
 
@@ -98,35 +122,49 @@ public class NasaGlobeView extends JPanel {
         return !enabled;
     }
 
-    private void getFlightData() {
+    private void getFlightData() throws PollDataException {
         try {
             flights.processStates( pollStates( api ) );
-            //flights.printFlights();
         } catch ( Exception e ) {
-            System.out.println( "An error occurred during the poll" );
-            e.printStackTrace();
+            throw new PollDataException();
         }
-
     }
 
     private OpenSkyStates pollStates( OpenSkyApi api ) throws Exception {
         return api.getStates( 0, null );
     }
 
-    class FlightUpdater implements Runnable{
+    class FlightUpdater implements Runnable {
         @Override
         public void run() {
-            try{
-                while( true ){
-                    getFlightData();
+            try {
+                while ( running ) {
+                    if ( running )
+                        getFlightData();
+
                     wwd.redraw();
-                    Thread.sleep( 10000 );
+
+                    if ( running )
+                        Thread.sleep( 10000 );
                 }
-            }
-            catch(Exception e){
-                System.out.println( "model.Flight update thread lost something." );
+            } catch ( PollDataException pde ) {
+                if ( AppConstants.DEBUGGING )
+                    System.out.println( "Polling was unable to finish." );
+            } catch ( SecurityException se ) {
+                if ( AppConstants.DEBUGGING )
+                    System.out.println( "Could not interrupt the Thread, waiting to close." );
+            } catch ( InterruptedException ie ) {
+                if ( AppConstants.DEBUGGING )
+                    System.out.println( "Interrupted the thread." );
+            } catch ( Exception e ) {
+                e.printStackTrace();
+                System.out.println( "Some other error." );
             }
         }
     }
 
+    public void killThreads() {
+        running = false;
+        flightUpdater.interrupt();
+    }
 }
