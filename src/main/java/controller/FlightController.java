@@ -1,8 +1,8 @@
 package controller;
 
 import gov.nasa.worldwind.render.markers.Marker;
-import model.AppConstants;
 import model.Flight;
+import model.PollDataException;
 import org.opensky.model.OpenSkyStates;
 import org.opensky.model.StateVector;
 
@@ -11,57 +11,62 @@ import java.util.HashMap;
 import java.util.List;
 
 /**
- * ${FILE_NAME}.java - Description
+ * FlightController.java - A controller that acts as a wrapper for a collection of Flights and their Corresponding
+ * Markers.  Abstracts away the updating and the creation of flights.
  *
- * @author
- * @version 12/Apr/2017
+ * @author Andrew McGuiness
+ * @version 18/Apr/2017
  */
 public class FlightController {
-    private static boolean DEBUGGING = false;
+    private HashMap< String, Flight > flightCollection;
+    private List< Marker > flightMarkers;
 
-    private HashMap< String, Flight > flightCollection = new HashMap<>();
-    private List< Marker > flightMarkers = new ArrayList<>();
+    /** Construct the FlightController */
+    public FlightController() {
+        flightCollection = new HashMap<>();
+        flightMarkers = new ArrayList<>();
+    }
 
-    public void processStates( OpenSkyStates states ) {
-        int added = 0;
-        int updated = 0;
-        for ( StateVector vector : states.getStates() ) {
-            String cs = vector.getCallsign();
+    /**
+     * Parse a OpenSkyStates data structure out into the individual flights.  Each flight is matched with is corresponding
+     * "vector".  This vector is handed to the flight to allow it to update it's own information.
+     *
+     * @param states A collection of "vectors" passed in from the OpenSky API
+     * @throws PollDataException If the polling times out, this is thrown.
+     */
+    public void processStates( OpenSkyStates states ) throws PollDataException {
+        try {
+            //Each Vector is a separate flight.
+            for ( StateVector vector : states.getStates() ) {
+                String cs = vector.getCallsign();
 
-            if ( cs != null && !cs.isEmpty() ) {
-                if ( flightCollection.containsKey( cs ) ) {
-                    updated++;
-                    flightCollection.get( cs ).updateFlight( vector );
-                } else {
-                    added++;
-                    Flight f = new Flight( vector );
+                //if there is no callsign, there is nothing to index the flight by, toss it.
+                if ( cs != null && !cs.isEmpty() ) {
+                    if ( flightCollection.containsKey( cs ) ) {
+                        //Old callsign?  Update the flight information.
+                        Flight f = flightCollection.get( cs );
+                        f.updateFlight( vector );
+                    } else {
+                        //New callsign?  Create a new flight for it.
+                        Flight f = new Flight( vector );
 
-                    if ( f.getMarker() != null ) {
-                        flightMarkers.add( f.getMarker() );
+                        if ( f.getMarker() != null )
+                            flightMarkers.add( f.getMarker() );
+
+                        flightCollection.put( cs, f );
                     }
-
-                    flightCollection.put( cs, f );
                 }
             }
-        }
-
-        if ( AppConstants.DEBUGGING ) {
-            System.out.println( "Added " + added + " flights." );
-            System.out.println( "Updated " + updated + " flights." );
+        } catch ( Exception e ) {
+            //The connection timed out.
+            throw new PollDataException();
         }
     }
 
-    public void printFlights() {
-        for ( Flight f : flightCollection.values() ) {
-            System.out.println( f + "\n" );
-        }
-    }
-
+    /**
+     * @return The collection of all the Markers that represent the Flights controlled here.
+     */
     public List< Marker > getFlightMarkers() {
         return flightMarkers;
-    }
-
-    public HashMap< String, Flight > getFlightCollection() {
-        return flightCollection;
     }
 }

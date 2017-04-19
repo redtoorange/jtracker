@@ -6,10 +6,11 @@ import gov.nasa.worldwind.render.markers.BasicMarker;
 import gov.nasa.worldwind.render.markers.MarkerAttributes;
 
 /**
- * ${FILE_NAME}.java - Description
+ * FlightMarker.java -  Custom Marker that contains information about the underlying flight it represents.  This
+ * is designed to simplify looking up the flight data.
  *
- * @author
- * @version 12/Apr/2017
+ * @author Andrew McGuiness
+ * @version 18/Apr/2017
  */
 public class FlightMarker extends BasicMarker {
     private Flight flight;

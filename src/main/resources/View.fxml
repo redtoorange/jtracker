@@ -1,26 +1,91 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.embed.swing.SwingNode?>
-<?import javafx.scene.control.ScrollPane?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.Tab?>
+<?import javafx.scene.control.TabPane?>
 <?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.web.WebView?>
 
-<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="700.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.ViewController">
-    <children>
-      <AnchorPane layoutX="150.0" prefHeight="700.0" prefWidth="1050.0">
-         <children>
-            <HBox alignment="CENTER" prefHeight="700.0" prefWidth="1050.0">
+<TabPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="700.0" prefWidth="1200.0" tabClosingPolicy="UNAVAILABLE" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8.0.111" fx:controller="controller.ViewController">
+  <tabs>
+    <Tab text="Live Flight Viewer">
+      <content>
+        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                <children>
-                      <SwingNode fx:id="swingNode" />
-               </children>
-            </HBox>
-         </children>
-      </AnchorPane>
-        <ScrollPane hbarPolicy="NEVER" prefHeight="700.0" prefWidth="150.0">
-            <content>
-                <AnchorPane fx:id="outputPanel" minHeight="0.0" minWidth="0.0" prefHeight="200.0" prefWidth="150.0" />
-            </content>
-        </ScrollPane>
-    </children>
-</Pane>
+                  <GridPane alignment="CENTER" prefHeight="672.0" prefWidth="1200.0">
+                    <columnConstraints>
+                      <ColumnConstraints halignment="CENTER" hgrow="NEVER" maxWidth="150.0" minWidth="150.0" prefWidth="150.0" />
+                        <ColumnConstraints halignment="CENTER" hgrow="NEVER" maxWidth="150.0" minWidth="4.0" prefWidth="14.0" />
+                      <ColumnConstraints halignment="CENTER" hgrow="NEVER" maxWidth="1091.0" minWidth="10.0" prefWidth="1036.0" />
+                    </columnConstraints>
+                    <rowConstraints>
+                      <RowConstraints minHeight="10.0" prefHeight="30.0" valignment="CENTER" vgrow="ALWAYS" />
+                    </rowConstraints>
+                     <children>
+                        <SwingNode fx:id="swingNode" GridPane.columnIndex="2" GridPane.halignment="LEFT" GridPane.hgrow="ALWAYS" GridPane.valignment="TOP" GridPane.vgrow="ALWAYS" />
+                        <GridPane alignment="CENTER">
+                          <columnConstraints>
+                            <ColumnConstraints halignment="CENTER" hgrow="NEVER" maxWidth="150.0" minWidth="150.0" prefWidth="150.0" />
+                          </columnConstraints>
+                          <rowConstraints>
+                            <RowConstraints maxHeight="539.0" minHeight="10.0" prefHeight="517.0" valignment="CENTER" vgrow="SOMETIMES" />
+                            <RowConstraints maxHeight="461.0" minHeight="10.0" prefHeight="158.0" vgrow="SOMETIMES" />
+                          </rowConstraints>
+                           <children>
+                              <VBox fx:id="outputPanel" alignment="CENTER" prefHeight="359.0" prefWidth="150.0" GridPane.halignment="CENTER" GridPane.hgrow="NEVER" GridPane.valignment="CENTER" GridPane.vgrow="NEVER" />
+                              <GridPane alignment="CENTER" prefHeight="145.0" prefWidth="150.0" GridPane.rowIndex="1">
+                                <columnConstraints>
+                                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                </columnConstraints>
+                                <rowConstraints>
+                                  <RowConstraints maxHeight="30.0" minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                  <RowConstraints maxHeight="30.0" minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                  <RowConstraints maxHeight="30.0" minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                    <RowConstraints maxHeight="30.0" minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                    <RowConstraints maxHeight="30.0" minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                </rowConstraints>
+                                 <children>
+                                    <Label text="Call Sign:" />
+                                    <Label text="Altitude:" GridPane.rowIndex="1" />
+                                    <Label text="Heading:" GridPane.rowIndex="2" />
+                                    <Label text="Origin:" GridPane.rowIndex="3" />
+                                    <Label text="Velocity:" GridPane.rowIndex="4" />
+                                    <Label fx:id="callSignLabel" text="No Flight" GridPane.columnIndex="1" />
+                                    <Label fx:id="altitudeLabel" text="No Flight" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                                    <Label fx:id="headingLabel" text="No Flight" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                                    <Label fx:id="originLabel" text="No Flight" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                                    <Label fx:id="velocityLabel" text="No Flight" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+                                 </children>
+                                 <opaqueInsets>
+                                    <Insets />
+                                 </opaqueInsets>
+                                 <padding>
+                                    <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+                                 </padding>
+                              </GridPane>
+                           </children>
+                        </GridPane>
+                        <Separator orientation="VERTICAL" prefHeight="200.0" GridPane.columnIndex="1" GridPane.halignment="LEFT" />
+                     </children>
+                  </GridPane>
+               </children></AnchorPane>
+      </content>
+    </Tab>
+    <Tab text="Detailed Info">
+      <content>
+        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+               <children>
+                  <WebView fx:id="webViewer" prefHeight="672.0" prefWidth="1200.0" />
+               </children></AnchorPane>
+      </content>
+    </Tab>
+  </tabs>
+</TabPane>
