@@ -156,8 +156,8 @@ public class FlightGlobePanel extends JPanel {
                 if ( AppConstants.DEBUGGING ) {
                     e.printStackTrace();
                     System.out.println( e.getMessage() );
+                    System.out.println( "Polling was unable to finish." );
                 }
-                System.out.println( "Polling was unable to finish." );
             }
         }
 

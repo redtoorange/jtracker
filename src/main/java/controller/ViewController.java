@@ -36,9 +36,12 @@ public class ViewController {
      */
     @FXML
     public void initialize() {
+
+
         flightInformationControllerController = new FlightInformationController( callSignLabel, altitudeLabel, headingLabel, originLabel, velocityLabel, webViewer );
 
-        sng = new FlightGlobePanel( AppConstants.GLOBE_WIDTH, AppConstants.GLOBE_HEIGHT );
+        sng = new FlightGlobePanel( AppConstants.GLOBE_WIDTH * ( AppConstants.HIGH_DEF ? 2 : 1 )
+                , AppConstants.GLOBE_HEIGHT * ( AppConstants.HIGH_DEF ? 2 : 1 ) );
         sng.addFlightListener( flightInformationControllerController );
 
         createAndSetSwingContent();

@@ -48,7 +48,13 @@ public class FlightInformationController implements FlightChangeListener {
      * @param flight The Flight to parse the data from.
      */
     public void updateInformation( Flight flight ) {
-        engine.load( FLIGHT_DATA + flight.getCallSign() );
+        try{
+            engine.load( FLIGHT_DATA + flight.getCallSign() );
+        }
+        catch(Exception e){
+            //So planes have no pages for them, usually student flights, just toss the error.
+        }
+
 
         callsignLabel.setText( flight.getCallSign() );
         altituteLabel.setText( formatter.format( flight.getAltitude() * 3.28084 ) + "ft" );
