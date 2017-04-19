@@ -1,4 +1,6 @@
-package model;
+package controller;
+
+import model.Flight;
 
 /**
  * FlightChangeListener.java - An object that is interest in changes that are made to the currently active/selected

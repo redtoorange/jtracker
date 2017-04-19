@@ -1,4 +1,4 @@
-package model;
+package controller;
 
 /**
  * FlightChangeController.java - The Object that controls the currently active/selected flight.  Will notify all

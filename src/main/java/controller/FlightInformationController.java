@@ -5,7 +5,6 @@ import javafx.scene.control.Label;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
 import model.Flight;
-import model.FlightChangeListener;
 
 import java.text.NumberFormat;
 

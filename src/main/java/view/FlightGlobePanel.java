@@ -1,13 +1,12 @@
 package view;
 
+import controller.FlightChangeListener;
 import controller.FlightController;
-import controller.FlightGlobe;
 import gov.nasa.worldwind.layers.Layer;
 import gov.nasa.worldwind.render.markers.Marker;
 import gov.nasa.worldwind.render.markers.MarkerAttributes;
 import model.AppConstants;
-import model.FlightChangeListener;
-import model.PollDataException;
+import model.FlightGlobe;
 import org.opensky.api.OpenSkyApi;
 import org.opensky.model.OpenSkyStates;
 
@@ -96,13 +95,9 @@ public class FlightGlobePanel extends JPanel {
         public void run() {
             try {
                 while ( running ) {
-                    if ( running )
-                        fade();
-
+                    fade();
                     globePanel.redraw();
-
-                    if ( running )
-                        Thread.sleep( 17 );
+                    Thread.sleep( 17 );
                 }
             } catch ( InterruptedException ie ) {
                 if ( AppConstants.DEBUGGING )
@@ -113,22 +108,16 @@ public class FlightGlobePanel extends JPanel {
             }
         }
 
-        /** Fade the markers by 1/1000 per 1/60th of a second. */
+        /** Fade the markers by 1/2000 per 1/60th of a second. */
         private void fade() {
             for ( int i = 0; i < flightList.size(); i++ ) {
                 MarkerAttributes a = flightList.get( i ).getAttributes();
+                double opacity = a.getOpacity() - ( 1d / 2000d );
+                a.setOpacity( Math.max( opacity, 0 ) );
 
-                double opacity = a.getOpacity();
-                if ( opacity > 0 ) {
-                    float amt = 1 / 1000.0f;
-                    opacity -= amt;
-                    if ( opacity < 0 )
-                        opacity = 0;
-
-                    a.setOpacity( opacity );
-                }
-
-                flightList.get( i ).setAttributes( a );
+                if ( AppConstants.DEBUGGING )
+                    if ( flightList.get( i ) == globePanel.getSelectedMarker() )
+                        System.out.println( opacity );
             }
         }
     }
@@ -140,14 +129,12 @@ public class FlightGlobePanel extends JPanel {
             try {
                 while ( running ) {
                     //Poll for data and update flights
-                    if ( running )
-                        getFlightData();
+                    getFlightData();
 
                     globePanel.redraw();
 
                     //Sleep for 10 seconds
-                    if ( running )
-                        Thread.sleep( 10000 );
+                    Thread.sleep( AppConstants.FLIGHT_REFRESH_INTERVAL * 1000 );
                 }
             } catch ( SecurityException se ) {
                 if ( AppConstants.DEBUGGING )
@@ -165,13 +152,11 @@ public class FlightGlobePanel extends JPanel {
         private void getFlightData() {
             try {
                 flights.processStates( pollStates( api ) );
-            } catch ( PollDataException e ) {
-                if ( AppConstants.DEBUGGING )
-                    System.out.println( e.getMessage() );
-                System.out.println( "Polling was unable to finish." );
             } catch ( Exception e ) {
-                if ( AppConstants.DEBUGGING )
+                if ( AppConstants.DEBUGGING ) {
+                    e.printStackTrace();
                     System.out.println( e.getMessage() );
+                }
                 System.out.println( "Polling was unable to finish." );
             }
         }
