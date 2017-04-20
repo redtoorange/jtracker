@@ -27,8 +27,6 @@ public class AppConstants {
     public static boolean DEBUGGING = true;
     /** Should to */
     public static boolean ANONYMOUS = true;
-    public static String USERNAME = "redtoorange";
-    public static String PASSWORD = "orange3161";
     /** How often to poll the API in seconds.   */
     public static int FLIGHT_REFRESH_INTERVAL = 10;
     public static int GLOBE_WIDTH= 1050;
