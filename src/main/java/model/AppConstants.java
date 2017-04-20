@@ -10,9 +10,9 @@ import gov.nasa.worldwind.render.Material;
  */
 public class AppConstants {
     /** Default Color for flights. */
-    public static final Material DEFAULT_FLIGHT_MAT = Material.LIGHT_GRAY;
+    public static final Material DEFAULT_FLIGHT_MAT = Material.RED;
     /** Default Color for the Flight's heading marker. */
-    public static final Material DEFAULT_HEADING_MAT = Material.LIGHT_GRAY;
+    public static final Material DEFAULT_HEADING_MAT = Material.RED;
     /** Selected Color for flights. */
     public static final Material SELECTED_FLIGHT_MAT = Material.GREEN;
     /** Selected Color for the Flight's heading marker. */
@@ -24,11 +24,14 @@ public class AppConstants {
     /** How much to scale the marker by when hovering. */
     public static final double HOVER_ZOOM = 1.4d;
     /** Print debugging data? */
-    public static boolean DEBUGGING = true;
+    public static boolean DEBUGGING = false;
     /** Should to */
     public static boolean ANONYMOUS = true;
     /** How often to poll the API in seconds.   */
     public static int FLIGHT_REFRESH_INTERVAL = 10;
-    public static int GLOBE_WIDTH= 1050;
+
+    public static boolean HIGH_DEF = true;
+
+    public static int GLOBE_WIDTH = 1050;
     public static int GLOBE_HEIGHT = 675;
 }
