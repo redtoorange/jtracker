@@ -25,12 +25,18 @@ public class AppConstants {
     public static final double HOVER_ZOOM = 1.4d;
     /** Print debugging data? */
     public static boolean DEBUGGING = false;
-    /** Should to */
+    /** Should the application use login credentials? */
     public static boolean ANONYMOUS = true;
+
+    /** Not used for prototyping */
+    public static String USERNAME = null;
+    /** Not used for prototyping */
+    public static String PASSWORD = null;
+
     /** How often to poll the API in seconds.   */
     public static int FLIGHT_REFRESH_INTERVAL = 10;
 
-    public static boolean HIGH_DEF = true;
+    public static boolean HIGH_DEF = false;
 
     public static int GLOBE_WIDTH = 1050;
     public static int GLOBE_HEIGHT = 675;
